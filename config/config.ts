@@ -10,11 +10,6 @@ export const config = {
   // LOGGER CONFIG
   FILE_LOGGER: process.env.FILE_LOGGER || "",
   DB_LOGGER: process.env.DB_LOGGER || "",
-  // DB CONFIG
-  DB_NAME: process.env.DB_NAME || "",
-  DB_USER: process.env.DB_USER || "",
-  DB_PASSWORD: process.env.DB_PASSWORD || "",
-  DB_HOST: process.env.DB_HOST || "",
   // PATHS DOWNLOADS
   PATH_DOWNLOADS: process.env.PATH_DOWNLOADS || "",
   PATH_RG: process.env.PATH_RG || "",
