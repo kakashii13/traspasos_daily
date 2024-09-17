@@ -1,5 +1,5 @@
 import fs from "fs";
-import { config } from "../config/config";
+import { config } from "../../config/config";
 
 /* 
     This function is used to remove download folder before start the download process

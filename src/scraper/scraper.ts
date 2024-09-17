@@ -1,14 +1,15 @@
 import puppeteer from "puppeteer";
 import { getDate } from "./getDate";
-import { linksLogger } from "./logger";
-import { config } from "../config/config";
+import { linksLogger } from "../logger";
+import { config } from "../../config/config";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 export const scraper = async (
   ulIndex: number,
   path: string,
-  customDate?: { day: string; month: string; year: string }
+  dateFrom?: { day: string; month: string; year: string },
+  dateTo?: { day: string; month: string; year: string }
 ) => {
   linksLogger.info("Starting scraper");
 
@@ -75,12 +76,20 @@ export const scraper = async (
     await page.waitForSelector("#fechadesde");
 
     // Get the custom date or the yesterday date
-    const { day, month, year } = customDate || getDate();
+    const { day, month, year } = getDate();
 
     // Type dates into input fields
     // e.g 01/01/2021 - 01/01/2021
-    await page.type('input[name="fechadesde"]', `${day}/${month}/${year}`);
-    await page.type('input[name="fechahasta"]', `${day}/${month}/${year}`);
+    await page.type(
+      'input[name="fechadesde"]',
+      `${dateFrom?.day || day}/${dateFrom?.month || month}/${
+        dateFrom?.year || year
+      }`
+    );
+    await page.type(
+      'input[name="fechahasta"]',
+      `${dateTo?.day || day}/${dateTo?.month || month}/${dateTo?.year || year}`
+    );
 
     // Click the submit button
     // after this click will be see the results of "Altas y Bajas"
@@ -128,20 +137,24 @@ export const scraper = async (
         }
         return response;
       });
-    } else console.log("Table not found");
+    } else linksLogger.info("Table not found");
 
     // log the number of registers to download
     linksLogger.info(
       `Count registers to download (${!ulIndex ? "RG" : "MONO"}) - Altas: ${
         response[0] ?? 0
-      } - Bajas: ${response[1] ?? 0}`
+      } - Bajas: ${response[1] ?? 0} - Day from: ${
+        dateFrom?.day || day
+      } - Day to: ${dateTo?.day || day}`
     );
 
     // wait for the download to complete
     await delay(8000);
   } catch (error) {
-    linksLogger.info(`Error`);
-    console.log("Error: ", error);
+    if (error instanceof Error) {
+      linksLogger.error(error.message);
+      console.log("Error: ", error.message);
+    }
   }
 
   await browser.close();

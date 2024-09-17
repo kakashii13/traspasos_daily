@@ -3,8 +3,7 @@ import { config } from "../config/config";
 
 const linksLog = config.FILE_LOGGER;
 
-// Create a logger for the download links
-// this logger will store the number of registers to download
+// Logger para guardar el número de registros a descargar
 export const linksLogger = createLogger({
   format: format.combine(
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
