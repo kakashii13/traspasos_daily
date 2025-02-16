@@ -19,4 +19,9 @@ export const config = {
   PATH_RG_B: process.env.PATH_RG_B || "",
   PATH_MONO_A: process.env.PATH_MONO_A || "",
   PATH_MONO_B: process.env.PATH_MONO_B || "",
+  // DATABASE
+  DB_NAME: process.env.DB_NAME || "",
+  DB_USER: process.env.DB_USER || "",
+  DB_PASS: process.env.DB_PASSWORD || "",
+  DB_HOST: process.env.DB_HOST || "localhost",
 };

@@ -1,47 +1,29 @@
 import { scraper } from "./scraper/scraper";
 import { removeFolder } from "./scraper/removeFolder";
-import { config } from "../config/config";
-import { linksLogger } from "./logger";
+import { config } from "./config/config";
+import sequelize from "./config/db";
+import processFile from "./services/processFile";
 
-// remove the downloads folder before start the download process
-removeFolder();
-
-// Recibe los argumentos pasados al script
-// el argumento[2] será algo como esto:
-// '[{ day: "06", month: "09", year: "2024" },{ day: "07", month: "09", year: "2024" }]'
-const args = process.argv.slice(2);
-const param = args.find((arg) => arg.startsWith("--parameters="));
-
-// Variables para guardar las fechas
-let dateFrom;
-let dateTo;
-
-// Si se pasaron parámetros
-if (param) {
-  // Obtener el valor del parámetro
-  const value = param.split("=")[1];
-  if (value != "") {
-    const dates = JSON.parse(value);
-    console.log(dates);
-    dateFrom = dates[0];
-    dateTo = dates[1];
-  } else {
-    linksLogger.info("No parameters passed");
-    console.log("No parameters passed");
-  }
+try {
+  sequelize.authenticate();
+  console.log("Connection has been stablished successfully.");
+} catch (error) {
+  console.log(error);
 }
 
-// Corre el scraper para "rg" y "mono"
-// Esta funcion obtiene los archivos para "Traspasos rg/mono diario"
-// y los guarda en la carpeta "downloads"
-// Se puede pasar una fecha personalizada como tercer argumento y cuarto argumento
-// e.g { day: "01", month: "01", year: "2021" }
+// // remove the downloads folder before start the download process
+removeFolder();
+
+// Run scraper for "rg" y "mono"
+// This function get data of "Traspasos rg/mono diario"
+// and save in "downloads" folder
 (async () => {
-  if (!dateFrom || !dateTo) {
-    await scraper(0, config.PATH_RG);
-    await scraper(1, config.PATH_MONO);
-  } else {
-    await scraper(0, config.PATH_RG, dateFrom, dateTo);
-    await scraper(1, config.PATH_MONO, dateFrom, dateTo);
-  }
+  await scraper(0, config.PATH_RG);
+  await scraper(1, config.PATH_MONO);
+
+  // Params are path of file, tipo_mov (A,B), regimen (1: gr, 2, mono)
+  processFile(config.PATH_RG_A, 1, 1);
+  processFile(config.PATH_RG_B, 2, 1);
+  processFile(config.PATH_MONO_A, 1, 2);
+  processFile(config.PATH_MONO_B, 2, 2);
 })();

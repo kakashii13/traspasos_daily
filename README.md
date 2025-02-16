@@ -38,13 +38,24 @@ npm install
 
 ```
     There are some fixed variables
-    URL = "https://www.sssalud.gob.ar/login.php?menuOpciones=Menu+Principal+de+Opciones"
-    OS_USER = ""
-    OS_PASSWORD = ""
-    PATH_DOWNLOADS = ""
-    FILE_LOGGER = ""
-    PATH_RG = ""
-    PATH_MONO = ""
+   # SSS config
+URL = "https://www.sssalud.gob.ar/login.php?menuOpciones=Menu+Principal+de+Opciones"
+OS_USER = ""
+OS_PASSWORD = ""
+
+# Path: downloads
+PATH_DOWNLOADS = ""
+PATH_RG = ""
+PATH_MONO = ""
+
+# Path: files
+PATH_RG_A = ""
+PATH_RG_B = ""
+PATH_MONO_A = ""
+PATH_MONO_B = ""
+
+# Path: logs
+FILE_LOGGER = ""
 ```
 
 6. Start the application
@@ -56,10 +67,3 @@ npm install
 ## Usage
 
 - Start the application with the propers .env variables and receive the request data
-- The default date will always be the day before the current day. If you want a custom date, you can pass as parameter in scraper function call
-
-  e.g
-
-```
-    await scraper(0, pathToDownload, {day: '01', month: '05', year: '2024'})
-```

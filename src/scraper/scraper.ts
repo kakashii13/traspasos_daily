@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import { getDate } from "./getDate";
-import { linksLogger } from "../logger";
-import { config } from "../../config/config";
+import { loggerFn } from "../logger";
+import { config } from "../config/config";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -11,7 +11,7 @@ export const scraper = async (
   dateFrom?: { day: string; month: string; year: string },
   dateTo?: { day: string; month: string; year: string }
 ) => {
-  linksLogger.info("Starting scraper");
+  loggerFn.info("Starting scraper");
 
   // #region Puppeteer setup
   const browser = await puppeteer.launch({
@@ -137,10 +137,10 @@ export const scraper = async (
         }
         return response;
       });
-    } else linksLogger.info("Table not found");
+    } else loggerFn.info("Table not found");
 
     // log the number of registers to download
-    linksLogger.info(
+    loggerFn.info(
       `Count registers to download (${!ulIndex ? "RG" : "MONO"}) - Altas: ${
         response[0] ?? 0
       } - Bajas: ${response[1] ?? 0} - Day from: ${
@@ -152,11 +152,11 @@ export const scraper = async (
     await delay(8000);
   } catch (error) {
     if (error instanceof Error) {
-      linksLogger.error(error.message);
+      loggerFn.error(error.message);
       console.log("Error: ", error.message);
     }
   }
 
   await browser.close();
-  linksLogger.info("Scraper finished");
+  loggerFn.info("Scraper finished");
 };
